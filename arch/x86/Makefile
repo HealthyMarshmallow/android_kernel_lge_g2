@@ -72,7 +72,7 @@ else
         KBUILD_CFLAGS += -maccumulate-outgoing-args
 endif
 
-ifdef CONFIG_CC_STACKPROTECTOR
+ifeq ($(CONFIG_CC_STACKPROTECTOR),y)
 	cc_has_sp := $(srctree)/scripts/gcc-x86_$(BITS)-has-stack-protector.sh
         ifeq ($(shell $(CONFIG_SHELL) $(cc_has_sp) $(CC) $(KBUILD_CPPFLAGS) $(biarch)),y)
                 stackp-y := -fstack-protector

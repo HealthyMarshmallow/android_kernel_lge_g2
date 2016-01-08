@@ -29,8 +29,10 @@ ifdef CONFIG_DEBUG_INFO
 BOOTCFLAGS	+= -g
 endif
 
+ifeq ($(CONFIG_CC_STACKPROTECTOR),y)
 ifeq ($(call cc-option-yn, -fstack-protector),y)
 BOOTCFLAGS	+= -fno-stack-protector
+endif
 endif
 
 BOOTCFLAGS	+= -I$(obj) -I$(srctree)/$(obj)

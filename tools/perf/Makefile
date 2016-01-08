@@ -168,12 +168,14 @@ SPARSE_FLAGS = -D__BIG_ENDIAN__ -D__powerpc__
 
 -include config/feature-tests.mak
 
+ifeq ($(CONFIG_CC_STACKPROTECTOR),y)
 ifeq ($(call try-cc,$(SOURCE_HELLO),-Werror -fstack-protector-all),y)
 	CFLAGS := $(CFLAGS) -fstack-protector-all
 endif
 
 ifeq ($(call try-cc,$(SOURCE_HELLO),-Werror -Wstack-protector),y)
        CFLAGS := $(CFLAGS) -Wstack-protector
+endif
 endif
 
 ifeq ($(call try-cc,$(SOURCE_HELLO),-Werror -Wvolatile-register-var),y)
