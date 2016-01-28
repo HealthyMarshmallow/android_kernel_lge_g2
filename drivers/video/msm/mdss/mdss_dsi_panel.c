@@ -21,6 +21,7 @@
 #include <linux/leds.h>
 #include <linux/qpnp/pwm.h>
 #include <linux/err.h>
+#include <linux/display_state.h>
 
 #include "mdss_dsi.h"
 #include <mach/board_lge.h>
@@ -112,6 +113,13 @@ static int num_of_on_cmds;
 #endif
 
 #define MIN_REFRESH_RATE 30
+
+bool display_on = true;
+
+bool is_display_on()
+{
+	return display_on;
+}
 
 DEFINE_LED_TRIGGER(bl_led_trigger);
 #if defined(CONFIG_MACH_LGE_BACKLIGHT_SUPPORT)
@@ -745,6 +753,8 @@ static int mdss_dsi_panel_on(struct mdss_panel_data *pdata)
 		return -EINVAL;
 	}
 
+	display_on = true;
+
 	ctrl = container_of(pdata, struct mdss_dsi_ctrl_pdata,
 				panel_data);
 	mipi  = &pdata->panel_info.mipi;
@@ -778,7 +788,10 @@ static int mdss_dsi_panel_off(struct mdss_panel_data *pdata)
 	if (ctrl->off_cmds.cmd_cnt)
 		mdss_dsi_panel_cmds_send(ctrl, &ctrl->off_cmds);
 
-	pr_info("%s:-\n", __func__);
+	pr_info("%s:\n", __func__);
+
+	display_on = false;
+
 	return 0;
 }
 #ifdef CONFIG_MACH_LGE
