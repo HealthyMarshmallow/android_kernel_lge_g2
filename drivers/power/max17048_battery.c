@@ -186,7 +186,9 @@ static int max17048_get_config(struct i2c_client *client)
 		dev_err(&client->dev, "%s: err %d\n", __func__, config);
 		return config;
 	} else {
+#ifdef MAX17048_DEBUG
 		printk(KERN_ERR "%s : config = 0x%x\n", __func__, config);
+#endif
 		chip->config = config;
 		return 0;
 	}
@@ -202,7 +204,9 @@ static int max17048_get_status(struct i2c_client *client)
 		dev_err(&client->dev, "%s: err %d\n", __func__, status);
 		return status;
 	} else {
+#ifdef MAX17048_DEBUG
 		printk(KERN_ERR "%s : status = 0x%x\n", __func__, status);
+#endif
 		chip->status = status;
 		return 0;
 	}
@@ -406,10 +410,10 @@ static void max17048_low_polling_work(struct work_struct *work)
 			if (!chip->batt_psy)
 				goto psy_error;
 		}
-
+#ifdef MAX17048_DEBUG
 		printk(KERN_INFO "%s : Reported Capacity : %d / voltage : %d\n",
 				__func__, chip->capacity_level, chip->voltage);
-
+#endif
 		power_supply_changed(chip->batt_psy);
 	}
 
@@ -555,8 +559,10 @@ static void max17048_work(struct work_struct *work)
 	max17048_get_vcell(chip->client);
 	max17048_get_soc(chip->client);
 
+#ifdef MAX17048_DEBUG
 	printk(KERN_ERR "%s : Raw SOC : 0x%x / vcell : 0x%x\n",
 		__func__, chip->soc, chip->vcell);
+#endif
 
 #ifdef CONFIG_LGE_PM
 	if ((abs(chip->voltage - chip->lasttime_voltage) >= 50) ||
@@ -659,7 +665,7 @@ psy_error:
 static irqreturn_t max17048_interrupt_handler(int irq, void *data)
 {
 	struct max17048_chip *chip = data;
-	printk(KERN_ERR "%s : MAX17048 interupt occured\n", __func__);
+	/* printk(KERN_ERR "%s : MAX17048 interupt occured\n", __func__); */
 
 	if (chip == NULL) {
 		printk(KERN_INFO "%s : called before init.\n", __func__);
@@ -676,7 +682,9 @@ static int max17048_clear_interrupt(struct i2c_client *client)
 {
 	struct max17048_chip *chip = i2c_get_clientdata(client);
 	int ret;
+#ifdef MAX17048_DEBUG
 	printk(KERN_INFO "%s.\n", __func__);
+#endif
 	if (chip == NULL)
 		return -ENODEV;
 
@@ -874,8 +882,10 @@ int max17048_set_rcomp_by_temperature(struct i2c_client *client)
 	else if (new_rcomp < 0)
 		new_rcomp = 0;
 
+#ifdef MAX17048_DEBUG
 	pr_err("%s : temp = %d, pre_rcomp = 0x%02X -> new_rcomp = 0x%02X\n"
 		, __func__ , temp, pre_rcomp, new_rcomp);
+#endif
 
 	/* Write RCOMP */
 	if (new_rcomp != pre_rcomp) {
@@ -1287,21 +1297,21 @@ static int __devinit max17048_probe(struct i2c_client *client,
 #endif
 	}
 
-	/* sysfs path : /sys/bus/i2c/devices/84-0036/voltage */
+	/* sysfs path : /sys/bus/i2c/devices/1-0036/voltage */
 	ret = device_create_file(&client->dev, &dev_attr_voltage);
 	if (ret < 0) {
 		pr_err("%s:File device creation failed: %d\n", __func__, ret);
 		ret = -ENODEV;
 		goto err_create_file_voltage_failed;
 	}
-	/* sysfs path : /sys/bus/i2c/devices/84-0036/capacity */
+	/* sysfs path : /sys/bus/i2c/devices/1-0036/capacity */
 	ret = device_create_file(&client->dev, &dev_attr_capacity);
 	if (ret < 0) {
 		pr_err("%s:File device creation failed: %d\n", __func__, ret);
 		ret = -ENODEV;
 		goto err_create_file_capacity_failed;
 	}
-	/* sysfs path : /sys/bus/i2c/devices/84-0036/fuelrst */
+	/* sysfs path : /sys/bus/i2c/devices/1-0036/fuelrst */
 	ret = device_create_file(&client->dev, &dev_attr_fuelrst);
 	if (ret < 0) {
 		pr_err("%s:File device creation failed: %d\n", __func__, ret);
