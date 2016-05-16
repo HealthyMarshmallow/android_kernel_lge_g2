@@ -507,10 +507,12 @@ void mmc_start_bkops(struct mmc_card *card, bool from_exception)
 		if (!card->ext_csd.raw_bkops_status)
 			goto out;
 
+		/*
 		pr_info("%s: %s: raw_bkops_status=0x%x, from_exception=%d\n",
 			mmc_hostname(card->host), __func__,
 			card->ext_csd.raw_bkops_status,
 			from_exception);
+		*/
 	}
 
 	/*
@@ -524,7 +526,8 @@ void mmc_start_bkops(struct mmc_card *card, bool from_exception)
 		mmc_card_set_need_bkops(card);
 		goto out;
 	}
-	pr_info("%s: %s: Starting bkops\n", mmc_hostname(card->host), __func__);
+
+	/* pr_info("%s: %s: Starting bkops\n", mmc_hostname(card->host), __func__); */
 
 	err = __mmc_switch(card, EXT_CSD_CMD_SET_NORMAL,
 			EXT_CSD_BKOPS_START, 1, 0, false, false);
@@ -2110,7 +2113,7 @@ int mmc_resume_bus(struct mmc_host *host)
 	if (!mmc_bus_needs_resume(host))
 		return -EINVAL;
 
-    printk("%s: Starting deferred resume\n", mmc_hostname(host));
+	pr_debug("%s: Starting deferred resume\n", mmc_hostname(host));
 	spin_lock_irqsave(&host->lock, flags);
 	host->bus_resume_flags &= ~MMC_BUSRESUME_NEEDS_RESUME;
 	host->rescan_disable = 0;
@@ -2124,8 +2127,7 @@ int mmc_resume_bus(struct mmc_host *host)
 	}
 
 	mmc_bus_put(host);
-    printk("%s: Deferred resume completed\n", mmc_hostname(host));
-
+	pr_debug("%s: Deferred resume completed\n", mmc_hostname(host));
 	return 0;
 }
 

@@ -678,7 +678,7 @@ static bool smb349_is_charger_present_rt(struct i2c_client *client)
 		voltage = smb349_get_usbin_adc();
 		pr_err("DC is present. DC_IN volt:%d\n", voltage);
 	} else
-		pr_err("DC is missing.\n");
+		//pr_err("DC is missing.\n");
 
 	return power_ok;
 
@@ -2077,7 +2077,7 @@ static void smb349_bb_worker(struct work_struct *work)
 	int ret;
 
 	chg_current = smb349_get_prop_batt_current_now(smb349_chg);
-	smb349_console_silent = 0;
+	smb349_console_silent = 1;
 
 	if (chg_current < DISCHARGE_CURRENT * 1000) {
 		pr_debug("discharging case\n");
@@ -3541,7 +3541,7 @@ static void smb349_batt_external_power_changed(struct power_supply *psy)
 	smb349_chg->usb_psy->get_property(smb349_chg->usb_psy,
 			  POWER_SUPPLY_PROP_SCOPE, &ret);
 	if (ret.intval) {
-		pr_err("%s : ret.intval=%d.\n", __func__, ret.intval);
+		//pr_err("%s : ret.intval=%d.\n", __func__, ret.intval);
 		if ((ret.intval == POWER_SUPPLY_SCOPE_SYSTEM)
 				&& !smb349_chg_is_otg_active(smb349_chg)) {
 			smb349_switch_usb_to_host_mode(smb349_chg);
@@ -4121,6 +4121,7 @@ static void smb349_status_print(struct smb349_struct *smb349_chg)
 	smb349_chg->batt_psy.get_property(&(smb349_chg->batt_psy),
 			  POWER_SUPPLY_PROP_CHARGE_TYPE, &ret);
 
+#if 0
 	printk(KERN_ERR "[chglog]EN:%d ERR:%d STAT:%c M:%c U:%d EOC:%d RE:%d BL:%c BO:%d BM:%d HOFF:%d TO:%c SYS:%d IT:%d TEMP:0x%02X PSY:[PRE:%d,ON:%d-%d,TYP:%d]\n",
 			val_3d & BIT(0)? 1: 0,		/* EN:charging enable */
 			val_3d & BIT(6)? 1: 0,		/* ERR:charging error */
@@ -4141,6 +4142,7 @@ static void smb349_status_print(struct smb349_struct *smb349_chg)
 			smb349_chg->usb_online, smb349_chg->ac_online, /* ON: power_supply online usb_online-ac_online */
 			ret.intval			/* TYP: power_supply charger type*/
 		);
+#endif
 }
 #endif
 

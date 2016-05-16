@@ -109,6 +109,9 @@ asmlinkage void _DbgOut(int level, const char *fmt,...)
 
     int nDbgLevel = atomic_read(&g_nDebugLevel);
 
+    if (nDbgLevel > 1) // DBL_ERROR
+        return;
+
     if (0 <= level && level <= nDbgLevel) {
         va_list args;
         int ret;
@@ -620,14 +623,14 @@ static int suspend(struct platform_device *pdev, pm_message_t state)
 
 static int resume(struct platform_device *pdev)
 {
-    DbgOut((DBL_ERROR, "tspdrv: resume.\n"));
+    DbgOut((DBL_INFO, "tspdrv: resume.\n"));
 
 	return 0;   /* can resume */
 }
 
 static void platform_release(struct device *dev)
 {
-    DbgOut((DBL_ERROR, "tspdrv: platform_release.\n"));
+    DbgOut((DBL_INFO, "tspdrv: platform_release.\n"));
 }
 
 module_init(tspdrv_init);
