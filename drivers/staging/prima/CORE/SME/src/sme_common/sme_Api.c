@@ -11499,19 +11499,11 @@ eHalStatus sme_SetSignificantChange (tHalHandle hHal,
         vosMessage.bodyptr = pEXTScanSetSignificantReq;
         vosMessage.type    = WDA_EXTSCAN_SET_SIGNF_RSSI_CHANGE_REQ;
         vosStatus = vos_mq_post_message(VOS_MQ_ID_WDA, &vosMessage);
-        if (!VOS_IS_STATUS_SUCCESS(vosStatus)) {
-           vos_mem_free(pEXTScanSetSignificantReq);
+        if (!VOS_IS_STATUS_SUCCESS(vosStatus))
            status = eHAL_STATUS_FAILURE;
-        }
 
         sme_ReleaseGlobalLock(&pMac->sme);
-    } else {
-        VOS_TRACE(VOS_MODULE_ID_SME, VOS_TRACE_LEVEL_ERROR, "%s: "
-                "sme_AcquireGlobalLock error", __func__);
-        vos_mem_free(pEXTScanSetSignificantReq);
-        status = eHAL_STATUS_FAILURE;
     }
-
     return(status);
 }
 
@@ -11551,17 +11543,10 @@ eHalStatus sme_ResetSignificantChange (tHalHandle hHal,
         vosMessage.bodyptr = pEXTScanResetSignificantReq;
         vosMessage.type    = WDA_EXTSCAN_RESET_SIGNF_RSSI_CHANGE_REQ;
         vosStatus = vos_mq_post_message(VOS_MQ_ID_WDA, &vosMessage);
-        if (!VOS_IS_STATUS_SUCCESS(vosStatus)) {
-           vos_mem_free(pEXTScanResetSignificantReq);
+        if (!VOS_IS_STATUS_SUCCESS(vosStatus))
            status = eHAL_STATUS_FAILURE;
-        }
 
         sme_ReleaseGlobalLock(&pMac->sme);
-    } else {
-        VOS_TRACE(VOS_MODULE_ID_SME, VOS_TRACE_LEVEL_ERROR, "%s: "
-                "sme_AcquireGlobalLock error", __func__);
-        vos_mem_free(pEXTScanResetSignificantReq);
-        status = eHAL_STATUS_FAILURE;
     }
     return(status);
 }
