@@ -1,7 +1,7 @@
 /*
  * Author: Chad Froebel <chadfroebel@gmail.com>
  *
- * Ported to LG G3 : Jeremy Neuberger <ptmr323@gmail.com>
+ * Ported to LG G2 : Jeremy Neuberger <ptmr323@gmail.com>
  *
  * This software is licensed under the terms of the GNU General Public
  * License version 2, as published by the Free Software Foundation, and
@@ -18,7 +18,7 @@
 #ifndef _LINUX_FASTCHG_H
 #define _LINUX_FASTCHG_H
 
-#define DEVICE_NAME "LG G3"
+#define DEVICE_NAME "LG G2"
 #define FAST_CHARGE_VERSION "v1.0 ptmr3"
 #define AC_LEVELS  "1000 1100 1200 1300 1400 1500 1600 1700 1800 1900 2000"
 #define USB_LEVELS "500 600 700 800 900 1000"
