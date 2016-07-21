@@ -1,7 +1,7 @@
 /*
  * Author: Chad Froebel <chadfroebel@gmail.com>
  *
- * Ported to LG G3 : Jeremy Neuberger <ptmr323@gmail.com>
+ * Ported to LG G2 : Jeremy Neuberger <ptmr323@gmail.com>
  *
  * This software is licensed under the terms of the GNU General Public
  * License version 2, as published by the Free Software Foundation, and
