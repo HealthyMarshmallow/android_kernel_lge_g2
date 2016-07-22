@@ -22,7 +22,7 @@
 /* #define LGE_TOUCH_TIME_DEBUG */
 #include <linux/earlysuspend.h>
 
-#define I2C_SUSPEND_WORKAROUND 1
+#undef I2C_SUSPEND_WORKAROUND
 #define MAX_FINGER	10
 #define MAX_BUTTON	4
 
