@@ -2271,7 +2271,7 @@ static void touch_gesture_wakeup_func(struct work_struct *work_gesture_wakeup)
 	mutex_unlock(&i2c_suspend_lock);
 	mutex_unlock(&ts->irq_work_mutex);
 
-	TOUCH_INFO_MSG("INTERRUPT_STATUS_REG %x\n", buf);
+	printk(KERN_INFO "[Touch] %s: BUF = %x !!\n", __func__, buf);
 
 #ifndef CONFIG_LGE_SECURITY_KNOCK_ON
 	if ((buf & 0x40) && touch_gesture_enable == LPWG_DOUBLE_TAP) {
