@@ -82,7 +82,7 @@ static struct workqueue_struct *workqueue;
  * echo Y > /sys/module/mmc_core/parameters/crc (Enlabled) or
  * echo 1 > /sys/module/mmc_core/parameters/crc (Enabled)
  */
-int use_spi_crc = 1;
+int use_spi_crc = 0;
 EXPORT_SYMBOL(use_spi_crc);
 module_param_named(crc, use_spi_crc, int, 0644);
 MODULE_PARM_DESC(
