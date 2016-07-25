@@ -2275,6 +2275,7 @@ static void touch_gesture_wakeup_func(struct work_struct *work_gesture_wakeup)
 
 #ifndef CONFIG_LGE_SECURITY_KNOCK_ON
 	if ((buf & 0x40) && touch_gesture_enable == LPWG_DOUBLE_TAP) {
+		printk(KERN_INFO "[Touch] %s: Reporting WAKEUP keys !!\n", __func__);
 		input_report_key(ts->input_dev, KEY_WAKEUP, BUTTON_PRESSED);
 		input_report_key(ts->input_dev, KEY_WAKEUP, BUTTON_RELEASED);
 		input_sync(ts->input_dev);
@@ -2345,13 +2346,18 @@ static void touch_gesture_wakeup_func(struct work_struct *work_gesture_wakeup)
 	}
 #else
 	if( buf & 0x04 ){
+		printk(KERN_INFO "[Touch] %s: Ending with 'buf & 0x04' !!\n", __func__);
 		kobject_uevent_env(&lge_touch_sys_device.kobj, KOBJ_CHANGE, touch_wakeup_gesture);
 	}else{
+		printk(KERN_INFO "[Touch] %s: Ending !!\n", __func__);
 		wake_unlock(&touch_wake_lock);
 		if(fb_blank_called == 1 && touch_gesture_enable == LPWG_DOUBLE_TAP) {
+			printk(KERN_INFO "[Touch] %s: Screen is blank !!\n", __func__);
 			mdelay(300);
-			if(fb_blank_called == 1)
+			if(fb_blank_called == 1) {
+				printk(KERN_INFO "[Touch] %s: Screen is still blank, trying to suspend !!\n", __func__);
 				touch_lcd_suspend(&ts->client->dev);
+			}
 		}
 	}
 #endif
