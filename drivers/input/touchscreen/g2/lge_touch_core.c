@@ -2348,8 +2348,11 @@ static void touch_gesture_wakeup_func(struct work_struct *work_gesture_wakeup)
 		kobject_uevent_env(&lge_touch_sys_device.kobj, KOBJ_CHANGE, touch_wakeup_gesture);
 	}else{
 		wake_unlock(&touch_wake_lock);
-		if(fb_blank_called == 1 && touch_gesture_enable == LPWG_DOUBLE_TAP)
-			touch_lcd_suspend(&ts->client->dev);
+		if(fb_blank_called == 1 && touch_gesture_enable == LPWG_DOUBLE_TAP) {
+			mdelay(300);
+			if(fb_blank_called == 1)
+				touch_lcd_suspend(&ts->client->dev);
+		}
 	}
 #endif
 #endif
