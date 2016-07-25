@@ -2351,15 +2351,15 @@ static void touch_gesture_wakeup_func(struct work_struct *work_gesture_wakeup)
 	}else{
 		printk(KERN_INFO "[Touch] %s: Ending !!\n", __func__);
 		wake_unlock(&touch_wake_lock);
-		if(fb_blank_called == 1 && touch_gesture_enable == LPWG_DOUBLE_TAP) {
-			printk(KERN_INFO "[Touch] %s: Screen is blank !!\n", __func__);
-			mdelay(300);
-			if(fb_blank_called == 1) {
-				printk(KERN_INFO "[Touch] %s: Screen is still blank, trying to suspend !!\n", __func__);
-				touch_lcd_suspend(&ts->client->dev);
-			}
-		}
 	}
+    if(fb_blank_called == 1 && touch_gesture_enable == LPWG_DOUBLE_TAP) {
+        printk(KERN_INFO "[Touch] %s: Screen is blank !!\n", __func__);
+        mdelay(300);
+        if(fb_blank_called == 1) {
+            printk(KERN_INFO "[Touch] %s: Screen is still blank, trying to suspend !!\n", __func__);
+            touch_lcd_suspend(&ts->client->dev);
+        }
+    }
 #endif
 #endif
 }
