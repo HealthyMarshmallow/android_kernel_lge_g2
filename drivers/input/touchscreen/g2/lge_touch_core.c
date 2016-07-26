@@ -2356,7 +2356,7 @@ static void touch_gesture_wakeup_func(struct work_struct *work_gesture_wakeup)
         printk(KERN_INFO "[Touch] %s: Screen is blank !!\n", __func__);
         msleep(250);
         if(fb_blank_called == 1 && ts_suspend == 1) {
-            printk(KERN_INFO "[Touch] %s: Screen is still blank, trying to suspend !!\n", __func__);
+            printk(KERN_INFO "[Touch] %s: Screen is still blank, trying to force suspend !!\n", __func__);
             touch_lcd_suspend(&ts->client->dev);
         }
     }
