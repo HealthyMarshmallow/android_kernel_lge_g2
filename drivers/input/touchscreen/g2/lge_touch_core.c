@@ -141,7 +141,6 @@ static int touch_lcd_resume(struct device *device);
 static int fb_notifier_callback(struct notifier_block *self,
 	unsigned long event, void *data)
 {
-	printk(KERN_INFO "[Touch] %s RUN !!\n", __func__);
 	struct fb_event *evdata = (struct fb_event*)data;
 	struct lge_touch_data *ts =
 		container_of(self, struct lge_touch_data, fb_notif);
@@ -149,7 +148,7 @@ static int fb_notifier_callback(struct notifier_block *self,
 	if (evdata && evdata->data && event == FB_EVENT_BLANK) {
 		int *blank = (int *)evdata->data;
 		if (*blank == FB_BLANK_UNBLANK) {
-			printk(KERN_INFO "[Touch] %s: blank == FB_BLANK_UNBLANK !!\n", __func__);
+			TOUCH_INFO_MSG("FB_BLANK_UNBLANK \n");
 		#ifdef CUST_G2_TOUCH
 			if(f54_window_crack_check_mode)
 				mdelay(200);
@@ -157,7 +156,7 @@ static int fb_notifier_callback(struct notifier_block *self,
 			fb_blank_called = 0;
 			touch_lcd_resume(&ts->client->dev);
 		} else if (*blank == FB_BLANK_POWERDOWN) {
-			printk(KERN_INFO "[Touch] %s: blank == FB_BLANK_POWERDOWN !!\n", __func__);
+			TOUCH_INFO_MSG("FB_BLANK_POWERDOWN \n");
 			fb_blank_called = 1;
 			#if !defined(CONFIG_LGE_SECURITY_KNOCK_ON)
 			touch_lcd_suspend(&ts->client->dev);
@@ -2272,11 +2271,10 @@ static void touch_gesture_wakeup_func(struct work_struct *work_gesture_wakeup)
 	mutex_unlock(&i2c_suspend_lock);
 	mutex_unlock(&ts->irq_work_mutex);
 
-	printk(KERN_INFO "[Touch] %s: BUF = %x !!\n", __func__, buf);
+	TOUCH_INFO_MSG("INTERRUPT_STATUS_REG %x\n", buf);
 
 #ifndef CONFIG_LGE_SECURITY_KNOCK_ON
 	if ((buf & 0x40) && touch_gesture_enable == LPWG_DOUBLE_TAP) {
-		printk(KERN_INFO "[Touch] %s: Reporting WAKEUP keys !!\n", __func__);
 		input_report_key(ts->input_dev, KEY_WAKEUP, BUTTON_PRESSED);
 		input_report_key(ts->input_dev, KEY_WAKEUP, BUTTON_RELEASED);
 		input_sync(ts->input_dev);
@@ -2347,20 +2345,10 @@ static void touch_gesture_wakeup_func(struct work_struct *work_gesture_wakeup)
 	}
 #else
 	if( buf & 0x04 ){
-		printk(KERN_INFO "[Touch] %s: Ending with 'buf & 0x04' !!\n", __func__);
 		kobject_uevent_env(&lge_touch_sys_device.kobj, KOBJ_CHANGE, touch_wakeup_gesture);
 	}else{
-		printk(KERN_INFO "[Touch] %s: Ending !!\n", __func__);
 		wake_unlock(&touch_wake_lock);
 	}
-    if(fb_blank_called == 1 && touch_gesture_enable == LPWG_DOUBLE_TAP) {
-        printk(KERN_INFO "[Touch] %s: Screen is blank !!\n", __func__);
-        msleep(250);
-        if(fb_blank_called == 1 && ts_suspend == 1) {
-            printk(KERN_INFO "[Touch] %s: Screen is still blank, trying to force suspend !!\n", __func__);
-            touch_lcd_suspend(&ts->client->dev);
-        }
-    }
 #endif
 #endif
 }
@@ -3473,7 +3461,7 @@ static irqreturn_t touch_thread_irq_handler(int irq, void *dev_id)
 #else
 		wake_lock_timeout(&touch_wake_lock, msecs_to_jiffies(1000));
 #endif
-		printk(KERN_INFO "[Touch] %s: Gesture wakeup !!\n", __func__);
+		TOUCH_INFO_MSG("gesture wakeup\n");
 		queue_delayed_work(touch_wq, &ts->work_gesture_wakeup,
 				msecs_to_jiffies(0));
 		return IRQ_HANDLED;
@@ -6007,7 +5995,7 @@ static int touch_lcd_suspend(struct device *device)
 
 #ifdef I2C_SUSPEND_WORKAROUND
 	if (!ts) {
-		printk(KERN_INFO "[Touch] %s: Called before init !!\n", __func__);
+		TOUCH_ERR_MSG("Called before init\n");
 		return 0;
 		}
 #endif
@@ -6015,7 +6003,7 @@ static int touch_lcd_suspend(struct device *device)
 #ifdef CUST_G2_TOUCH
 	if(!ts->curr_pwr_state) {
 		ts_suspend = 1;
-		printk(KERN_INFO "[Touch] %s: Not executed curr_pwr_state !!\n", __func__);
+		TOUCH_INFO_MSG("touch_suspend is not executed curr_pwr_state\n");
 		return 0;
 	}
 #endif
@@ -6030,7 +6018,7 @@ static int touch_lcd_suspend(struct device *device)
 
 	if (ts->pdata->role->operation_mode){
 		touch_disable_irq(ts);
-		printk(KERN_INFO "[Touch] %s: Disable IRQ !!\n", __func__);
+		TOUCH_INFO_MSG("%s : disable_irq !!\n", __func__);
 	}
 	else
 		hrtimer_cancel(&ts->timer);
@@ -6233,7 +6221,7 @@ static int touch_lcd_resume(struct device *device)
 
 	if (ts->pdata->role->operation_mode){
 		touch_enable_irq(ts);
-		printk(KERN_INFO "[Touch] %s: Enable IRQ !!\n", __func__);
+		TOUCH_INFO_MSG("%s : enable_irq !!\n", __func__);
 	}
 	else
 		hrtimer_start(&ts->timer, ktime_set(0, ts->pdata->role->report_period), HRTIMER_MODE_REL);
@@ -6329,14 +6317,14 @@ static int touch_resume(struct device *device)
 #elif defined(CUST_G2_TOUCH_WAKEUP_GESTURE)
 static int touch_suspend(struct device *device)
 {
-	printk(KERN_INFO "[Touch] %s RUN !!\n", __func__);
+	TOUCH_INFO_MSG("%s \n", __func__);
 	mutex_lock(&i2c_suspend_lock);
 	return 0;
 }
 
 static int touch_resume(struct device *device)
 {
-	printk(KERN_INFO "[Touch] %s RUN !!\n", __func__);
+	TOUCH_INFO_MSG("%s \n", __func__);
 	mutex_unlock(&i2c_suspend_lock);
 	return 0;
 }
