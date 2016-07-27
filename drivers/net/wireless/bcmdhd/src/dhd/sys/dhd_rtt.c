@@ -182,8 +182,8 @@ dhd_rtt_start(dhd_pub_t *dhd)
 	int mpc = 0;
 	int nss, mcs, bw;
 	uint32 rspec = 0;
-	int8 eabuf[ETHER_ADDR_STR_LEN];
-	int8 chanbuf[CHANSPEC_STR_LEN];
+	//int8 eabuf[ETHER_ADDR_STR_LEN];
+	//int8 chanbuf[CHANSPEC_STR_LEN];
 	bool set_mpc = FALSE;
 	wl_proxd_iovar_t proxd_iovar;
 	wl_proxd_params_iovar_t proxd_params;
@@ -254,13 +254,13 @@ dhd_rtt_start(dhd_pub_t *dhd)
 
 	/* chanspec */
 	tof_params->chanspec = htol16(rtt_target->chanspec);
-	/* set parameter */
+	/* set parameter
 	DHD_RTT(("Target addr(Idx %d) %s, Channel : %s for RTT (ftm_cnt %d, rety_cnt : %d)\n",
 		rtt_status->cur_idx,
 		bcm_ether_ntoa((const struct ether_addr *)&rtt_target->addr, eabuf),
 		wf_chspec_ntoa(rtt_target->chanspec, chanbuf), rtt_target->ftm_cnt,
 		rtt_target->retry_cnt));
-
+	*/
 	if (rtt_target->type == RTT_ONE_WAY) {
 		proxd_tune.u.tof_tune.flags = htol32(WL_PROXD_FLAG_ONEWAY);
 		/* report RTT results for initiator */
@@ -389,7 +389,7 @@ dhd_rtt_convert_to_host(rtt_result_t *rtt_results, const wl_proxd_event_data_t* 
 {
 	int err = BCME_OK;
 	int i;
-	char eabuf[ETHER_ADDR_STR_LEN];
+	//char eabuf[ETHER_ADDR_STR_LEN];
 	char diststr[40];
 	struct timespec ts;
 	NULL_CHECK(rtt_results, "rtt_results is NULL", err);
@@ -426,11 +426,11 @@ dhd_rtt_convert_to_host(rtt_result_t *rtt_results, const wl_proxd_event_data_t* 
 	}
 
 	if (ntoh32(evp->mode) == WL_PROXD_MODE_INITIATOR) {
-		DHD_RTT(("Target:(%s) %s;\n", bcm_ether_ntoa((&evp->peer_mac), eabuf), diststr));
+		//DHD_RTT(("Target:(%s) %s;\n", bcm_ether_ntoa((&evp->peer_mac), eabuf), diststr));
 		DHD_RTT(("RTT : mean %d mode %d median %d\n", rtt_results->meanrtt,
 			rtt_results->modertt, rtt_results->medianrtt));
 	} else {
-		DHD_RTT(("Initiator:(%s) %s; ", bcm_ether_ntoa((&evp->peer_mac), eabuf), diststr));
+		//DHD_RTT(("Initiator:(%s) %s; ", bcm_ether_ntoa((&evp->peer_mac), eabuf), diststr));
 	}
 	if (rtt_results->sdrtt > 0) {
 		DHD_RTT(("sigma:%d.%d\n", rtt_results->sdrtt/10, rtt_results->sdrtt % 10));

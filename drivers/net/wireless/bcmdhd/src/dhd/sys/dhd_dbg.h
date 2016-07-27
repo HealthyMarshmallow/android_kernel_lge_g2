@@ -99,6 +99,7 @@
 #define DHD_ARPOE(args)
 #define DHD_REORDER(args)
 #define DHD_PNO(args)
+#define DHD_RTT(args)
 
 #ifdef CUSTOMER_HW4
 #define DHD_TRACE_HW4	DHD_ERROR
