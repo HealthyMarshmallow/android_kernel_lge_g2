@@ -4460,12 +4460,11 @@ static int reg_access(unsigned int reg)
 			if (soundcontrol.playback_lock)
                                 ret = 0;
                         break;
-		case TAIKO_A_CDC_RX7_VOL_CTL_B2_CTL:
 		case TAIKO_A_CDC_RX3_VOL_CTL_B2_CTL:
 			if (soundcontrol.speaker_lock)
                                 ret = 0;
 			break;
-		case TAIKO_A_CDC_TX7_VOL_CTL_GAIN:
+		case TAIKO_A_CDC_TX3_VOL_CTL_GAIN:
 			if (soundcontrol.recording_lock)
 				ret = 0;
 			break;
@@ -7398,25 +7397,18 @@ void update_headphones_volume_boost(unsigned int vol_boost)
 void update_speaker_gain(int vol_boost)
 {
 	int default_val = soundcontrol.default_speaker_value;
-	int boosted_val = default_val | vol_boost;
+	int boosted_val = default_val + vol_boost;
 
 	pr_info("Sound Control: Speaker default value %d\n", default_val);
 
 	soundcontrol.speaker_lock = false;
 	taiko_write(soundcontrol.snd_control_codec,
 		TAIKO_A_CDC_RX3_VOL_CTL_B2_CTL, boosted_val);
-
-	taiko_write(soundcontrol.snd_control_codec,
-		TAIKO_A_CDC_RX7_VOL_CTL_B2_CTL, boosted_val);
 	soundcontrol.speaker_lock = true;
-	
+
 	pr_info("Sound Control: Boosted Speaker RX3 value %d\n",
 		taiko_read(soundcontrol.snd_control_codec,
 		TAIKO_A_CDC_RX3_VOL_CTL_B2_CTL));
-
-	pr_info("Sound Control: Boosted Speaker RX7 value %d\n",
-		taiko_read(soundcontrol.snd_control_codec,
-		TAIKO_A_CDC_RX7_VOL_CTL_B2_CTL));
 }
 
 void update_mic_gain(unsigned int vol_boost)
@@ -7428,12 +7420,12 @@ void update_mic_gain(unsigned int vol_boost)
 
 	soundcontrol.recording_lock = false;
 	taiko_write(soundcontrol.snd_control_codec,
-		TAIKO_A_CDC_TX7_VOL_CTL_GAIN, boosted_val);
+		TAIKO_A_CDC_TX3_VOL_CTL_GAIN, boosted_val);
 	soundcontrol.recording_lock = true;
 
 	pr_info("Sound Control: Boosted Mic value %d\n",
 		taiko_read(soundcontrol.snd_control_codec,
-		TAIKO_A_CDC_TX7_VOL_CTL_GAIN));
+		TAIKO_A_CDC_TX3_VOL_CTL_GAIN));
 }
 
 static int taiko_codec_probe(struct snd_soc_codec *codec)
@@ -7652,10 +7644,8 @@ static int taiko_codec_probe(struct snd_soc_codec *codec)
 		TAIKO_A_CDC_RX1_VOL_CTL_B2_CTL);
 	soundcontrol.default_speaker_value = taiko_read(codec,
 		TAIKO_A_CDC_RX3_VOL_CTL_B2_CTL);
-	soundcontrol.default_speaker_value = taiko_read(codec,
-		TAIKO_A_CDC_RX7_VOL_CTL_B2_CTL);
 	soundcontrol.default_mic_value = taiko_read(codec,
-		TAIKO_A_CDC_TX7_VOL_CTL_GAIN);
+		TAIKO_A_CDC_TX3_VOL_CTL_GAIN);
 
 	return ret;
 
