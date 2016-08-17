@@ -104,11 +104,14 @@ static ssize_t speaker_boost_store(struct device * dev,
 		struct device_attribute * attr, const char * buf, size_t size)
 {
 	int ret;
-	unsigned long val;
+	unsigned long val, val2;
 
-	ret = kstrtoul(buf, 0, &val);
-	if (ret < 0)
-		return ret;
+	ret = sscanf(buf, "%lu %lu", &val, &val2);
+	if (ret == 0) {
+		ret = kstrtoul(buf, 0, &val);
+		if (ret < 0)
+			return ret;
+	}
 
 	speaker_boost = val > MAX_VALUE ? MAX_VALUE : val;
 
