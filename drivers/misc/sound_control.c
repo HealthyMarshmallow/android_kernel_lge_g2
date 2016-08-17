@@ -12,7 +12,7 @@
 #include <linux/miscdevice.h>
 #include <linux/sound_control.h>
 
-#define MAX_VALUE 20
+#define MAX_VALUE 30
 
 /*
  * Volume boost value
