@@ -7471,12 +7471,12 @@ void update_mic_gain(unsigned int vol_boost)
 
 	soundcontrol.lock = false;
 	taiko_write(soundcontrol.snd_control_codec,
-		TAIKO_A_CDC_TX5_VOL_CTL_GAIN, boosted_val);
+		TAIKO_A_CDC_TX_5_GAIN, boosted_val);
 	soundcontrol.lock = true;
 
 	pr_info("Sound Control: Boosted Mic value %d\n",
 		taiko_read(soundcontrol.snd_control_codec,
-		TAIKO_A_CDC_TX5_VOL_CTL_GAIN));
+		TAIKO_A_CDC_TX_5_GAIN));
 }
 
 void update_camera_mic_gain(unsigned int vol_boost)
@@ -7717,7 +7717,7 @@ static int taiko_codec_probe(struct snd_soc_codec *codec)
 	soundcontrol.default_speaker_value = taiko_read(codec,
 		TAIKO_A_CDC_RX7_VOL_CTL_B2_CTL);
 	soundcontrol.default_mic_value = taiko_read(codec,
-		TAIKO_A_CDC_TX5_VOL_CTL_GAIN);
+		TAIKO_A_CDC_TX_5_GAIN);
 	soundcontrol.default_camera_mic_value = taiko_read(codec,
 		TAIKO_A_CDC_TX6_VOL_CTL_GAIN);
 
