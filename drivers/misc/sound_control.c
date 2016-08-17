@@ -153,7 +153,7 @@ static ssize_t camera_mic_boost_show(struct device *dev,
     return sprintf(buf, "%d\n", camera_mic_boost);
 }
 
-static ssize_t mic_boost_store(struct device * dev,
+static ssize_t camera_mic_boost_store(struct device * dev,
 		struct device_attribute * attr, const char * buf, size_t size)
 {
 	int ret;

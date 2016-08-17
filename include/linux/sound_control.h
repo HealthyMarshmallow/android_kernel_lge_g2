@@ -14,5 +14,6 @@ void update_headphones_volume_boost(int vol_boost);
 void update_headset_boost(int vol_boost);
 void update_speaker_gain(int vol_boost);
 void update_mic_gain(int vol_boost);
+void update_camera_mic_gain(int vol_boost);
 
 #endif
