@@ -1354,9 +1354,7 @@ static __ref int do_phihong_checker(void *data)
 	static int count = 0;
 	static int usb_present;
 	while (!kthread_should_stop()) {
-		while (wait_for_completion_interruptible(
-			&chip->phihong_complete) != 0)
-			;
+		wait_for_completion(&chip->phihong_complete);
 		INIT_COMPLETION(chip->phihong_complete);
 		usb_present = bq24296_is_charger_present(chip);
 		switch (chip->phihong) {
