@@ -136,7 +136,7 @@ struct cpufreq_governor cpufreq_gov_ondemandplus = {
         .owner = THIS_MODULE,
 };
 
-static inline cputime64_t get_cpu_idle_time_jiffy(unsigned int cpu,
+static inline cputime64_t sget_cpu_idle_time_jiffy(unsigned int cpu,
                                                   cputime64_t *wall)
 {
         u64 idle_time;
@@ -159,13 +159,13 @@ static inline cputime64_t get_cpu_idle_time_jiffy(unsigned int cpu,
         return jiffies_to_usecs(idle_time);
 }
 
-static inline cputime64_t get_cpu_idle_time(unsigned int cpu,
+static inline cputime64_t sget_cpu_idle_time(unsigned int cpu,
                                             cputime64_t *wall)
 {
         u64 idle_time = get_cpu_idle_time_us(cpu, wall);
 
         if (idle_time == -1ULL)
-                idle_time = get_cpu_idle_time_jiffy(cpu, wall);        
+                idle_time = sget_cpu_idle_time_jiffy(cpu, wall);        
         else if (io_is_busy == 2)
                 idle_time += (get_cpu_iowait_time_us(cpu, wall) / 2);
         else if (!io_is_busy)
@@ -208,7 +208,7 @@ static void cpufreq_ondemandplus_timer(unsigned long data)
 
         time_in_idle = pcpu->time_in_idle;
         idle_exit_time = pcpu->idle_exit_time;
-        now_idle = get_cpu_idle_time(data, &pcpu->timer_run_time);
+        now_idle = sget_cpu_idle_time(data, &pcpu->timer_run_time);
         smp_wmb();
 
         /* If we raced with cancelling a timer, skip. */
@@ -415,7 +415,7 @@ rearm:
                         pcpu->timer_idlecancel = 1;
                 }
 
-                pcpu->time_in_idle = get_cpu_idle_time(
+                pcpu->time_in_idle = sget_cpu_idle_time(
                         data, &pcpu->idle_exit_time);
                 mod_timer(&pcpu->cpu_timer,
                         jiffies + usecs_to_jiffies(timer_rate));
@@ -449,7 +449,7 @@ static void cpufreq_ondemandplus_idle_start(void)
                  * the CPUFreq driver.
                  */
                 if (!pending) {
-                        pcpu->time_in_idle = get_cpu_idle_time(
+                        pcpu->time_in_idle = sget_cpu_idle_time(
                                 smp_processor_id(), &pcpu->idle_exit_time);
                         pcpu->timer_idlecancel = 0;
                         mod_timer(&pcpu->cpu_timer,
@@ -500,7 +500,7 @@ static void cpufreq_ondemandplus_idle_end(void)
             pcpu->timer_run_time >= pcpu->idle_exit_time &&
             pcpu->governor_enabled) {
                 pcpu->time_in_idle =
-                        get_cpu_idle_time(smp_processor_id(),
+                        sget_cpu_idle_time(smp_processor_id(),
                                              &pcpu->idle_exit_time);
                 pcpu->timer_idlecancel = 0;
                 mod_timer(&pcpu->cpu_timer,
@@ -860,7 +860,7 @@ static int cpufreq_governor_ondemandplus(struct cpufreq_policy *policy,
                         pcpu->target_freq = policy->cur;
                         pcpu->freq_table = freq_table;
                         pcpu->target_set_time_in_idle =
-                                get_cpu_idle_time(j,
+                                sget_cpu_idle_time(j,
                                              &pcpu->target_set_time);
                         pcpu->governor_enabled = 1;
                         smp_wmb();
