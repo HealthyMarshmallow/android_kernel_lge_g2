@@ -49,7 +49,7 @@ static long audio_ioctl(struct file *file, unsigned int cmd, unsigned long arg)
 	int rc = 0;
 
 	switch (cmd) {
-	case AUDIO_START:
+	case AUDIO_START: {
 		pr_err("%s[%p]: AUDIO_START session_id[%d]\n", __func__,
 			audio, audio->ac->session);
 		if (audio->feedback == NON_TUNNEL_MODE) {
