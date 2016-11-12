@@ -110,6 +110,7 @@ config SIMPLE_GPU_ALGORITHM
 config DEVFREQ_GOV_CONSERVATIVE
 	tristate "Conservative"
 	depends on MSM_KGSL
+	default y
 	help
 	  Chooses frequency based on the recent load on the device. Works
 	  similar as conservative governor of cpufreq does and implements
