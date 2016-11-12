@@ -92,6 +92,7 @@ config DEVFREQ_GOV_MSM_CPUFREQ
 config DEVFREQ_GOV_MSM_BW_HWMON
 	tristate "HW monitor based governor for device BW"
 	depends on ARCH_MSM_KRAIT
+	default y
 	help
 	  HW monitor based governor for device to DDR bandwidth voting.
 
@@ -119,6 +120,7 @@ config DEVFREQ_GOV_CONSERVATIVE
 
 config DEVFREQ_GOV_MSM_CACHE_HWMON
 	tristate "HW monitor based governor for cache frequency"
+	default y
 	help
 	  HW monitor based governor for cache frequency scaling. This
 	  governor currently supports only Krait L2 PM counters.  Sets the
