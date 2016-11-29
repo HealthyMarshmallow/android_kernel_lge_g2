@@ -244,10 +244,18 @@ CONFIG_SHELL := $(shell if [ -x "$$BASH" ]; then echo $$BASH; \
 	  else if [ -x /bin/bash ]; then echo /bin/bash; \
 	  else echo sh; fi ; fi)
 
+KERNEL_OPTS = \
+	-O3 \
+	-funsafe-math-optimizations \
+	-fmodulo-sched \
+	-fmodulo-sched-allow-regmoves \
+	-fivopts \
+	-pipe \
+
 HOSTCC       = gcc
 HOSTCXX      = g++
-HOSTCFLAGS   = -Wall -Wmissing-prototypes -Wstrict-prototypes -O2 -fomit-frame-pointer
-HOSTCXXFLAGS = -O2
+HOSTCFLAGS   = -Wall -Wmissing-prototypes -Wstrict-prototypes -O2 -fomit-frame-pointer -DNDEBUG -fno-stack-protector
+HOSTCXXFLAGS = -O2 -DNDEBUG -fno-stack-protector
 
 # Decide whether to build built-in, modular, or both.
 # Normally, just do built-in.
@@ -563,11 +571,7 @@ endif # $(dot-config)
 # Defaults to vmlinux, but the arch makefile usually adds further targets
 all: vmlinux
 
-ifdef CONFIG_CC_OPTIMIZE_FOR_SIZE
-KBUILD_CFLAGS	+= -Os $(call cc-disable-warning,maybe-uninitialized,)
-else
-KBUILD_CFLAGS	+= -O2
-endif
+KBUILD_CFLAGS	+= $(KERNEL_OPTS) -DNDEBUG -fno-stack-protector -fomit-frame-pointer -Wno-array-bounds -Wno-unused-parameter -Wno-sign-compare -Wno-missing-field-initializers -Wno-unused-variable -Wno-unused-value  $(call cc-disable-warning,maybe-uninitialized,)
 
 include $(srctree)/arch/$(SRCARCH)/Makefile
 
