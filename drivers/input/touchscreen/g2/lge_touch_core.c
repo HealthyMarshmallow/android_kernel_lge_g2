@@ -6344,6 +6344,7 @@ static struct of_device_id synaptics_match_table[] = {
 
 static struct i2c_device_id lge_ts_id[] = {
 	{LGE_TOUCH_NAME, 0 },
+	{ }
 };
 
 #if defined(CONFIG_PM)
