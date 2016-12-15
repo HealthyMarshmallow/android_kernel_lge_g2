@@ -227,6 +227,7 @@ config CPU_FREQ_GOV_CONSERVATIVE
 config CPU_FREQ_GOV_ZZMOOVE
 	tristate "'zzmoove' cpufreq governor"
 	depends on CPU_FREQ
+	default y
 	help
 	  'zzmoove' - based on cpufreq_conservative, using predefined
 	  frequency lookup tables and optimized scaling triggers instead of
@@ -241,6 +242,7 @@ config CPU_INPUT_BOOST
 
 config CPU_FREQ_GOV_BARRY_ALLEN  
 	tristate "'barry_allen' cpufreq policy governor"  
+	default y
 	help  
 
 menu "x86 CPU frequency scaling drivers"
