@@ -111,6 +111,13 @@ extern struct dsi_cmd_desc *tun_dsi_panel_on_cmds;
 static int num_of_on_cmds;
 #endif
 
+bool display_on = true;
+
+bool is_display_on(void)
+{
+        return display_on;
+}
+
 #define MIN_REFRESH_RATE 30
 
 DEFINE_LED_TRIGGER(bl_led_trigger);
@@ -754,6 +761,8 @@ static int mdss_dsi_panel_on(struct mdss_panel_data *pdata)
 	if (ctrl->on_cmds.cmd_cnt)
 		mdss_dsi_panel_cmds_send(ctrl, &ctrl->on_cmds);
 
+	display_on = true;
+
 	pr_info("%s-:\n", __func__);
 	return 0;
 }
@@ -777,6 +786,8 @@ static int mdss_dsi_panel_off(struct mdss_panel_data *pdata)
 
 	if (ctrl->off_cmds.cmd_cnt)
 		mdss_dsi_panel_cmds_send(ctrl, &ctrl->off_cmds);
+
+	display_on = false;
 
 	pr_info("%s:-\n", __func__);
 	return 0;
